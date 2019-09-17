@@ -10,7 +10,17 @@ type File struct {
 	closed bool
 }
 
-func Read(file File) {}
+type ErrorFileClosed struct{}
+
+func (e ErrorFileClosed) Error() string {
+	return "file: file is closed"
+}
+func Read(file File) error {
+	if file.closed {
+		return ErrorFileClosed{}
+	}
+	return nil
+}
 
 func main() {
 	f := File{closed: true}

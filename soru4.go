@@ -23,6 +23,11 @@ func main() {
 	ch := make(chan int)
 	go Hammer(ch)
 
-	res := <-ch
-	fmt.Println("Finished after", res, "seconds.")
+	select {
+	case res := <-ch:
+		fmt.Println("Finished after", res, "seconds.")
+	case <-time.After(time.Second * 1):
+		return
+	}
+
 }

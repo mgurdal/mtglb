@@ -5,20 +5,26 @@ package main
 
 import (
 	"fmt"
+	"sync"
 )
 
-func Notify(to, msg string) {
-	fmt.Println("sending message:", msg, "to:", to)
+func Notify(to, message string, wg *sync.WaitGroup) {
+	fmt.Println("sending message:", message, "to:", to)
+	wg.Done()
 }
 
 func main() {
+	wg := &sync.WaitGroup{}
 	subs := []string{
 		"user1",
 		"user2",
 		"user3",
 	}
-	msg := "hello"
+	wg.Add(len(subs))
+
 	for _, sub := range subs {
-		Notify(sub, msg)
+		go Notify(sub, "hello", wg)
 	}
+
+	wg.Wait()
 }
